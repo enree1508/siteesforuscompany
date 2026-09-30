@@ -1,0 +1,558 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Esforus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600&family=DM+Mono:wght@300;400;500&display=swap">
+<style>
+/* Layout: site institucional em várias páginas (menu com submenu, trilha de navegação, capa com imagem e título, blocos de texto em duas colunas, cartões de links, rodapé com mapa do site). Branco e grafite, azul só como sinal. Rótulos pequenos em fonte de terminal que chegam criptografados. */
+:root{
+  --white:#FFFFFF; --ink:#0D0E12; --gray:#6B6E78; --mute:#9A9DA6; --line:#E4E5EA; --soft:#F4F5F7; --accent:#3346F0; --dark:#0D0E12;
+  --sans:"Onest",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"DM Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--white);color:var(--ink);font-family:var(--sans);font-weight:300;font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.w{max-width:1200px;margin:0 auto;padding-inline:32px}
+@media (max-width:600px){.w{padding-inline:20px}}
+.mono{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase}
+.enc{color:var(--mute)}
+.page[hidden]{display:none!important}
+
+/* topo */
+.util{background:var(--soft);font-size:12px;color:var(--gray)}
+.util .w{display:flex;justify-content:flex-end;gap:24px;height:34px;align-items:center}
+.util a{text-decoration:none}.util a:hover{color:var(--ink)}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:var(--white);border-bottom:1px solid var(--line)}
+header.top .w{display:flex;align-items:center;justify-content:space-between;height:74px;gap:24px}
+.logo{display:flex;align-items:center;gap:11px;text-decoration:none;font-weight:600;letter-spacing:.16em;text-transform:uppercase;font-size:15px}
+.logo svg{width:26px;height:18px}
+.menu{display:flex;align-items:center;gap:4px;font-size:15px;font-weight:400}
+.menu > a,.menu .dd > button{all:unset;cursor:pointer;padding:10px 14px;border-radius:2px;text-decoration:none;position:relative}
+.menu > a:hover,.menu .dd > button:hover,.menu a.on,.menu .dd.on > button{color:var(--accent)}
+.menu .dd{position:relative}
+.menu .dd > button::after{content:"";display:inline-block;width:6px;height:6px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg);margin:0 0 3px 9px}
+.sub{position:absolute;left:0;top:calc(100% + 12px);background:var(--white);border:1px solid var(--line);box-shadow:0 18px 40px rgba(13,14,18,.08);min-width:240px;padding:8px;display:none}
+.dd:hover .sub,.dd:focus-within .sub,.dd.open .sub{display:block}
+.dd:hover .sub::before{content:"";position:absolute;left:0;right:0;top:-14px;height:14px}
+.sub a{display:block;padding:12px 14px;text-decoration:none}
+.sub a:hover{background:var(--soft);color:var(--accent)}
+.cta{background:var(--ink);color:var(--white);text-decoration:none;padding:11px 18px;font-size:14px;font-weight:400;transition:background .25s;white-space:nowrap}
+.cta:hover{background:var(--accent)}
+.burger{all:unset;display:none;cursor:pointer;width:40px;height:40px;position:relative}
+.burger i,.burger i::before,.burger i::after{position:absolute;left:9px;width:22px;height:1.5px;background:var(--ink);content:""}
+.burger i{top:19px}.burger i::before{top:-7px;left:0}.burger i::after{top:7px;left:0}
+@media (max-width:980px){
+  .burger{display:block}
+  .menu{position:absolute;left:0;right:0;top:100%;background:var(--white);flex-direction:column;align-items:stretch;padding:12px 20px 24px;border-bottom:1px solid var(--line);display:none;max-height:calc(100vh - 80px);overflow:auto}
+  .menu.open{display:flex}
+  .menu > a,.menu .dd > button{display:block;padding:14px 0;border-bottom:1px solid var(--line)}
+  .sub{position:static;display:block;border:0;box-shadow:none;padding:0 0 8px 14px}
+  .sub a{padding:10px 0}
+  header .cta{display:none}
+}
+
+/* capa */
+.cover{position:relative;min-height:min(62vh,560px);display:flex;align-items:flex-end;color:var(--white);overflow:hidden;background:var(--dark)}
+.cover.big{min-height:min(80vh,720px)}
+.cover canvas{position:absolute;inset:0;width:100%;height:100%}
+.cover::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(13,14,18,0) 35%,rgba(13,14,18,.78))}
+.cover .w{position:relative;z-index:1;width:100%;padding-block:56px}
+.cover .mono{color:rgba(255,255,255,.7)}
+.cover h1{font-weight:400;font-size:clamp(34px,5.4vw,72px);line-height:1.05;letter-spacing:-.03em;margin:14px 0 0;max-width:18ch;text-wrap:balance}
+.cover p{max-width:50ch;color:rgba(255,255,255,.82);margin:18px 0 0;font-size:18px}
+.cover .acts{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:13px 20px;text-decoration:none;font-size:15px;font-weight:400;border:1px solid currentColor;transition:background .25s,color .25s,border-color .25s}
+.btn.solid{background:var(--white);color:var(--ink);border-color:var(--white)}
+.btn.solid:hover{background:var(--accent);border-color:var(--accent);color:var(--white)}
+.btn.line:hover{background:var(--white);color:var(--ink)}
+.btn.dark{background:var(--ink);color:var(--white);border-color:var(--ink)}
+.btn.dark:hover{background:var(--accent);border-color:var(--accent)}
+.cap{position:absolute;right:20px;bottom:14px;z-index:1;font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:rgba(255,255,255,.55)}
+
+.crumb{border-bottom:1px solid var(--line)}
+.crumb ol{list-style:none;margin:0;padding:16px 0;display:flex;flex-wrap:wrap;gap:8px;font-size:13px;color:var(--gray)}
+.crumb li+li::before{content:"/";margin-right:8px;color:var(--mute)}
+.crumb a{text-decoration:none}.crumb a:hover{color:var(--accent)}
+.crumb li:last-child{color:var(--ink)}
+
+/* blocos */
+.blk{padding-block:96px}
+.blk.soft{background:var(--soft)}
+.two{display:grid;grid-template-columns:5fr 7fr;gap:64px;align-items:start}
+.two.rev{grid-template-columns:7fr 5fr}
+@media (max-width:860px){.two,.two.rev{grid-template-columns:1fr;gap:28px}}
+h2{font-weight:400;font-size:clamp(28px,3.4vw,44px);line-height:1.12;letter-spacing:-.025em;margin:12px 0 0;text-wrap:balance}
+.blk .mono{color:var(--accent)}
+.prose p{margin:0 0 18px;max-width:62ch;color:#2E3038}
+.prose p:last-child{margin-bottom:0}
+.prose strong{font-weight:500;color:var(--ink)}
+.art{position:relative;aspect-ratio:4/3;background:var(--dark);overflow:hidden;max-width:100%}
+.art canvas{position:absolute;inset:0;width:100%;height:100%}
+.nums{list-style:none;margin:28px 0 0;padding:0;border-top:1px solid var(--line)}
+.nums li{display:grid;grid-template-columns:56px 1fr;gap:12px;padding:18px 0;border-bottom:1px solid var(--line);font-weight:400}
+.nums li span{font-family:var(--mono);font-size:13px;color:var(--accent);padding-top:3px}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin-top:44px}
+.card{background:var(--white);padding:28px 26px 30px;display:flex;flex-direction:column;gap:10px;text-decoration:none;min-width:0;transition:background .25s}
+.card h3{margin:0;font-weight:500;font-size:19px;letter-spacing:-.01em}
+.card p{margin:0;color:var(--gray);font-size:15px}
+.card .go{margin-top:auto;padding-top:14px;font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+a.card:hover{background:var(--soft)}
+a.card:hover h3{color:var(--accent)}
+.soft .card{background:var(--white)}
+
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:44px}
+@media (max-width:860px){.tiles{grid-template-columns:1fr}}
+.tile{text-decoration:none;display:flex;flex-direction:column;gap:14px;min-width:0}
+.tile .art{aspect-ratio:16/10}
+.tile h3{margin:0;font-weight:500;font-size:20px}
+.tile p{margin:0;color:var(--gray);font-size:15px}
+.tile:hover h3{color:var(--accent)}
+.tile .art canvas{transition:transform .8s cubic-bezier(.2,.8,.2,1)}
+.tile:hover .art canvas{transform:scale(1.04)}
+
+.people{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:24px;margin-top:44px}
+.person{border:1px solid var(--line);display:grid;grid-template-columns:110px 1fr;min-width:0}
+.person .mg{background:var(--ink);color:var(--white);display:grid;place-items:center;font-family:var(--mono);font-size:26px;letter-spacing:.06em;aspect-ratio:1}
+.person div.t{padding:20px 22px;display:flex;flex-direction:column;justify-content:center;gap:4px}
+.person h3{margin:0;font-weight:500;font-size:18px}
+.person span{color:var(--gray);font-size:14px}
+
+.news{list-style:none;margin:44px 0 0;padding:0;border-top:1px solid var(--line)}
+.news li{display:grid;grid-template-columns:150px 1fr;gap:24px;padding:26px 0;border-bottom:1px solid var(--line)}
+@media (max-width:600px){.news li{grid-template-columns:1fr;gap:6px}}
+.news time{font-family:var(--mono);font-size:12px;letter-spacing:.08em;color:var(--gray);padding-top:5px}
+.news h3{margin:0;font-weight:500;font-size:20px}
+.news p{margin:6px 0 0;color:var(--gray);font-size:15px;max-width:62ch}
+
+.band{background:var(--dark);color:var(--white)}
+.band .w{padding-block:88px;display:flex;flex-wrap:wrap;gap:28px;align-items:flex-end;justify-content:space-between}
+.band h2{max-width:22ch}
+.band .mono{color:#9EA6FF}
+
+.contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:24px;margin-top:44px}
+.cbox{border:1px solid var(--line);padding:26px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.cbox strong{font-weight:500;font-size:18px;overflow-wrap:anywhere;user-select:all}
+.cbox button,.cbox a.l{all:unset;cursor:pointer;align-self:flex-start;font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-top:8px}
+.cbox button:hover,.cbox a.l:hover{text-decoration:underline}
+.cbox a.l+button{margin-top:2px}
+
+footer{background:var(--dark);color:#B9BCC6;font-size:14px}
+footer .cols{display:grid;grid-template-columns:1.4fr repeat(3,1fr);gap:40px;padding-block:72px 48px}
+@media (max-width:860px){footer .cols{grid-template-columns:1fr 1fr}}
+@media (max-width:480px){footer .cols{grid-template-columns:1fr}}
+footer h4{margin:0 0 14px;font-family:var(--mono);font-weight:400;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#7F838F}
+footer ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
+footer a{text-decoration:none}footer a:hover{color:var(--white)}
+footer .logo{color:var(--white);margin-bottom:16px}
+footer .bot{border-top:1px solid #23252D;padding-block:22px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;font-size:12px;color:#7F838F}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.tile .art canvas{transition:none}}
+.purpose{font-size:clamp(22px,2.4vw,30px)!important;line-height:1.3;font-weight:400;color:var(--ink)!important;border-left:2px solid var(--accent);padding-left:22px;margin-top:8px!important;letter-spacing:-.015em}
+.art.wide{aspect-ratio:21/8}
+@media (max-width:600px){.art.wide{aspect-ratio:4/3}}
+.vals{list-style:none;margin:56px 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:0 64px;border-top:1px solid var(--line)}
+@media (max-width:760px){.vals{grid-template-columns:1fr}}
+.val{display:grid;grid-template-columns:56px 1fr;gap:20px;padding:32px 0;border-bottom:1px solid var(--line);min-width:0}
+.vi{width:48px;height:48px;color:var(--accent)}
+.vi svg{width:100%;height:100%}
+.val h3{margin:4px 0 8px;font-weight:500;font-size:20px;letter-spacing:-.01em}
+.val p{margin:0;color:var(--gray);font-size:16px;max-width:52ch}
+footer .copy{border-top:1px solid #23252D;text-align:center;font-size:13px;color:#B9BCC6}
+footer .copy .w{padding-block:20px}
+.grps{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:48px}
+@media (max-width:1000px){.grps{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.grps{grid-template-columns:1fr}}
+.grp{background:var(--white);padding:30px 26px 26px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.gi{width:40px;height:40px;color:var(--accent)}.gi svg{width:100%;height:100%}
+.grp .gl{color:var(--ink)!important;font-size:13px;margin-top:10px;letter-spacing:.14em}
+.grp p{margin:0;color:var(--gray);font-size:15px}
+.grp ul{list-style:none;margin:14px 0 0;padding:0;border-top:1px solid var(--line)}
+.grp li{padding:11px 0;border-bottom:1px solid var(--line);font-size:15px;font-weight:400;display:flex;gap:10px;align-items:baseline}
+.grp li::before{content:"";width:5px;height:5px;background:var(--accent);flex:none;transform:translateY(-2px)}
+.grp li:last-child{border-bottom:0}
+
+.cover.ic{background:radial-gradient(circle at 74% 42%,#1C2356,#0D0E12 62%)}
+.cover.ic::after{background:linear-gradient(90deg,rgba(13,14,18,.55),rgba(13,14,18,0) 55%)}
+.ill{position:absolute;right:4%;top:50%;transform:translateY(-50%);width:min(50%,600px);aspect-ratio:3/2}
+.ill svg,.fill svg{display:block;width:100%;height:100%}
+@media (max-width:760px){.ill{width:92%;right:4%;top:20px;transform:none;opacity:.45}}
+.art.ia{background:radial-gradient(circle at 60% 40%,#1C2356,#0D0E12 70%)}
+.art.ia .fill{position:absolute;inset:8% 6%}
+.tile .art .fill{transition:transform .8s cubic-bezier(.2,.8,.2,1)}
+.tile:hover .art .fill{transform:scale(1.04)}
+
+.tile{border-top:1px solid var(--ink);padding-top:22px}
+
+/* site todo em letra digital */
+:root{--sans:"DM Mono",ui-monospace,Menlo,Consolas,monospace}
+body{font-size:15px;line-height:1.7;letter-spacing:-.01em}
+.cover h1{font-weight:400;font-size:clamp(30px,4.4vw,58px);letter-spacing:-.04em}
+h2{font-weight:400;font-size:clamp(24px,2.8vw,36px);letter-spacing:-.035em}
+.card h3,.tile h3,.val h3,.news h3,.person h3{font-weight:500;font-size:17px;letter-spacing:-.02em}
+.menu{font-size:13px}.cta,.btn{font-size:13px}
+.prose p,.val p,.card p,.tile p,.news p,.grp p,.grp li{font-size:14px}
+.purpose{font-size:clamp(19px,2vw,24px)!important}
+.logo{font-weight:500}
+
+/* tudo em caixa alta */
+body{text-transform:uppercase;letter-spacing:0}
+.nocaps{text-transform:none}
+
+.wa{display:inline-grid;place-items:center;width:56px;height:56px;border-radius:50%;background:var(--ink);color:#fff;margin-top:6px;transition:transform .2s,background .2s}
+.wa:hover{transform:scale(1.06);background:#3A3B40}
+.wa svg{width:28px;height:28px}
+.wa.sm{width:36px;height:36px;margin:0;background:#fff;color:var(--ink)}.wa.sm svg{width:20px;height:20px}
+</style>
+
+<div class="util"><div class="w"><a href="#transparencia">Transparência</a><a href="#noticias">Notícias</a><a href="#fale-conosco">Fale conosco</a></div></div>
+<header class="top">
+  <div class="w">
+    <a class="logo" href="#home" aria-label="Esforus, página inicial"><svg viewBox="0 0 52 36" aria-hidden="true"><path fill="currentColor" d="M0 0h44l8 8H0zM0 14h32l8 8H0zM0 28h44l8 8H0z"/></svg>Esforus</a>
+    <nav class="menu" id="menu" aria-label="Principal">
+      <a href="#home" data-r="home">Home</a>
+      <div class="dd" data-g="quem"><button type="button" aria-haspopup="true">Quem somos</button>
+        <div class="sub"><a href="#quem-somos">Visão geral</a><a href="#proposito">Propósito</a><a href="#transparencia">Transparência</a></div>
+      </div>
+      <a href="#servicos" data-r="servicos">Serviços</a>
+      <a href="#onde-estamos" data-r="onde-estamos">Onde estamos</a>
+      <a href="#sustentabilidade" data-r="sustentabilidade">Sustentabilidade</a>
+      <a href="#noticias" data-r="noticias">Notícias</a>
+    </nav>
+    <a class="cta" href="#fale-conosco">Fale conosco</a>
+    <button class="burger" id="burger" type="button" aria-label="Abrir menu" aria-controls="menu" aria-expanded="false"><i></i></button>
+  </div>
+</header>
+
+<main>
+<!-- HOME -->
+<div class="page" data-page="home">
+  <section class="cover big"><canvas data-art="trails" data-seed="3"></canvas>
+    <div class="w">
+      <div class="mono dec">Esforus Company</div>
+      <h1 class="dec">Seu esforço, multiplicado.</h1>
+      <p>Marketing digital com criativo que converte, inteligência artificial e automação trabalhando juntos para o seu negócio vender todos os dias.</p>
+      <div class="acts"><a class="btn solid" href="#servicos">Conheça nossos serviços</a><a class="btn line" href="#fale-conosco">Fale conosco</a></div>
+    </div>
+  </section>
+  <section class="blk"><div class="w two">
+    <div><div class="mono dec">Quem somos</div><h2>Uma empresa digital criada para fazer negócios crescerem.</h2></div>
+    <div class="prose"><p>A Esforus nasceu em 2026 com uma ideia simples: o esforço de quem empreende merece render mais. Por isso juntamos anúncios de alto rendimento, sites, automações e inteligência artificial numa mesma estrutura, pensada para produtos de preço acessível que vendem em volume.</p><p>Começamos com produtos próprios. O próximo passo é abrir essa estrutura para outros negócios.</p><a class="btn dark" href="#quem-somos">Saiba mais sobre a Esforus</a></div>
+  </div></section>
+  <section class="blk soft"><div class="w">
+    <div class="mono dec">Explore</div><h2>Conheça a Esforus</h2>
+    <div class="tiles">
+      <a class="tile" href="#servicos"><h3>Serviços</h3><p>Crescimento, inteligência, operação e receita.</p></a>
+      <a class="tile" href="#proposito"><h3>Propósito</h3><p>Por que existimos e no que acreditamos.</p></a>
+      <a class="tile" href="#transparencia"><h3>Transparência</h3><p>As regras que seguimos em cada peça.</p></a>
+    </div>
+  </div></section>
+  <section class="blk"><div class="w">
+    <div class="mono dec">Notícias</div><h2>Últimas da Esforus</h2>
+    <ul class="news" id="news-home"></ul>
+  </div></section>
+  <section class="band"><div class="w"><div><div class="mono dec">Fale conosco</div><h2>O mercado muda toda semana. Seu negócio muda antes.</h2></div><a class="btn solid" href="#fale-conosco">Entrar em contato</a></div></section>
+</div>
+
+<!-- QUEM SOMOS -->
+<div class="page" data-page="quem-somos" hidden>
+  <section class="cover"><canvas data-art="blades" data-seed="11"></canvas><div class="w"><div class="mono dec">Quem somos</div><h1 class="dec">Quem somos</h1></div></section>
+  <nav class="crumb" aria-label="Você está em"><div class="w"><ol><li><a href="#home">Home</a></li><li>Quem somos</li></ol></div></nav>
+  <section class="blk"><div class="w two">
+    <div><div class="mono dec">A empresa</div><h2>Marketing digital, tecnologia e assinatura recorrente.</h2></div>
+    <div class="prose"><p>A <strong>Esforus Company</strong> foi fundada em setembro de 2026. Trabalhamos com infoprodutos, sites, assinaturas recorrentes, inteligência artificial para negócios e automações.</p><p>O que sustenta tudo isso é o criativo. Preço baixo só fecha a conta quando o anúncio converte acima da média, e é nisso que a gente concentra energia: fazer cada real investido em anúncio trazer mais venda.</p></div>
+  </div></section>
+  <section class="blk soft"><div class="w">
+    <div class="mono dec">Saiba mais</div><h2>Conheça a Esforus por dentro</h2>
+    <div class="cards">
+      <a class="card" href="#proposito"><h3>Propósito</h3><p>Por que a Esforus existe e os valores que guiam o trabalho.</p><span class="go">Acessar →</span></a>
+      <a class="card" href="#transparencia"><h3>Transparência</h3><p>Nosso compromisso com ética em cada anúncio e cada dado.</p><span class="go">Acessar →</span></a>
+    </div>
+  </div></section>
+</div>
+
+<!-- PROPÓSITO -->
+<div class="page" data-page="proposito" hidden>
+  <section class="cover"><div class="w"><div class="mono dec">Quem somos</div><h1 class="dec">Propósito</h1></div></section>
+  <nav class="crumb" aria-label="Você está em"><div class="w"><ol><li><a href="#home">Home</a></li><li><a href="#quem-somos">Quem somos</a></li><li>Propósito</li></ol></div></nav>
+  <section class="blk"><div class="w two">
+    <div><div class="mono dec">Nosso propósito</div><h2>O propósito da Esforus</h2></div>
+    <div class="prose">
+      <p>Acreditamos que todo negócio tem potencial para vender mais do que vende hoje. Na maioria das vezes, o que falta é método, tecnologia e alguém acompanhando os números de perto.</p>
+      <p>É dessa convicção que nasce o nosso propósito:</p>
+      <p class="purpose">Existimos para multiplicar o esforço de quem empreende.</p>
+    </div>
+  </div></section>
+  <section class="blk" style="border:0"><div class="w">
+    <div class="two"><div><div class="mono dec">Valores</div><h2>Conheça os valores da Esforus</h2></div>
+      <div class="prose"><p>São as regras que a gente segue no dia a dia, com cliente pequeno ou grande. Confira:</p></div></div>
+    <ul class="vals"><li class="val"><span class="vi"><svg viewBox="0 0 40 40" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="20" cy="20" r="14"/><circle cx="20" cy="20" r="7"/><circle cx="20" cy="20" r="1.5" fill="currentColor"/></g></svg></span><div><h3>Real por real</h3><p>A gente trata a verba do cliente como se fosse nossa. Anúncio que não vende sai do ar cedo, mesmo quando a arte ficou bonita.</p></div></li><li class="val"><span class="vi"><svg viewBox="0 0 40 40" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20s5-9 14-9 14 9 14 9-5 9-14 9S6 20 6 20z"/><circle cx="20" cy="20" r="4"/></g></svg></span><div><h3>Número na mesa</h3><p>Relatório com print do gerenciador, sem arredondar pra cima. Se a semana foi fraca, você fica sabendo pela gente antes de precisar perguntar.</p></div></li><li class="val"><span class="vi"><svg viewBox="0 0 40 40" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 32h28"/><path d="M10 26l7-7 5 4 9-11"/><path d="M26 12h5v5"/></g></svg></span><div><h3>Testa antes, escala depois</h3><p>Nenhuma ideia ganha verba grande no primeiro dia. Ela sobe pequena, prova que vende e só então recebe mais dinheiro.</p></div></li><li class="val"><span class="vi"><svg viewBox="0 0 40 40" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 5v5M20 30v5M5 20h5M30 20h5M9.5 9.5l3.5 3.5M27 27l3.5 3.5M9.5 30.5l3.5-3.5M27 13l3.5-3.5"/><circle cx="20" cy="20" r="5"/></g></svg></span><div><h3>Máquina faz o repetitivo</h3><p>Tarefa que se repete toda semana vira automação. O tempo que sobra vai para conversar com cliente e planejar o próximo passo.</p></div></li><li class="val"><span class="vi"><svg viewBox="0 0 40 40" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="14" cy="14" r="5"/><circle cx="27" cy="16" r="4"/><path d="M5 32c1-6 5-9 9-9s8 3 9 9"/><path d="M22 31c1-4 3-7 6-7s5 2 6 6"/></g></svg></span><div><h3>Promessa pé no chão</h3><p>Nenhuma peça nossa promete milagre. Quando aparece um número na arte, ele é real ou vem marcado como ilustrativo.</p></div></li></ul>
+  </div></section>
+</div>
+
+<!-- TRANSPARÊNCIA -->
+<div class="page" data-page="transparencia" hidden>
+  <section class="cover ic"><div class="ill" data-ill="transparencia"></div><div class="w"><div class="mono dec">Quem somos</div><h1 class="dec">Transparência</h1></div></section>
+  <nav class="crumb" aria-label="Você está em"><div class="w"><ol><li><a href="#home">Home</a></li><li><a href="#quem-somos">Quem somos</a></li><li>Transparência</li></ol></div></nav>
+  <section class="blk"><div class="w two">
+    <div><div class="mono dec">Nosso compromisso</div><h2>Ética em cada anúncio, cada número e cada dado.</h2></div>
+    <div class="prose"><p>Marketing digital vive de confiança. Por isso tratamos a ética como parte do trabalho, e não como um detalhe no fim. Cada peça que sai da Esforus passa por regras claras antes de ir ao ar.</p><p>Acreditamos que o caminho para multiplicar o esforço de quem empreende passa pela transparência em tudo o que fazemos.</p></div>
+  </div></section>
+  <section class="blk soft"><div class="w">
+    <div class="mono dec">Saiba mais</div><h2>Saiba mais sobre nossa atuação</h2>
+    <div class="cards">
+      <a class="card" href="#fale-conosco"><h3>Fale conosco</h3><p>Dúvidas, propostas e parcerias.</p><span class="go">Acessar →</span></a>
+      <a class="card" href="#fale-conosco"><h3>Canal de ética</h3><p>Viu algo em desacordo com as nossas regras? Conte pra gente.</p><span class="go">Acessar →</span></a>
+      <a class="card" href="#privacidade"><h3>Privacidade</h3><p>Como cuidamos dos dados de clientes e de quem compra deles.</p><span class="go">Acessar →</span></a>
+    </div>
+  </div></section>
+  <section class="blk"><div class="w two rev">
+    <div class="art ia"><div class="fill" data-ill="regras"></div></div>
+    <div><div class="mono dec">Publicidade responsável</div><h2>As regras que seguimos em toda peça</h2>
+      <ol class="nums">
+        <li><span>01</span>Todo número ou tela que aparece em arte leva, na própria peça, o aviso de que é ilustrativo.</li>
+        <li><span>02</span>Resultado de cliente só é divulgado com número real e autorização por escrito.</li>
+        <li><span>03</span>Nenhuma peça usa nome, telefone ou conversa real de cliente.</li>
+        <li><span>04</span>Não prometemos que alguém vai mudar, voltar ou comprar. Prometemos só o que está nas mãos de quem compra.</li>
+      </ol>
+    </div>
+  </div></section>
+  <section class="blk soft" id="privacidade"><div class="w two">
+    <div><div class="mono dec">Privacidade</div><h2>Dados tratados com cuidado</h2></div>
+    <div class="prose"><p>Seus dados e os dados dos seus clientes são tratados com sigilo e usados exclusivamente para entregar o serviço contratado. Nenhuma informação é vendida, compartilhada ou usada para outros fins.</p><p>Seguimos os princípios da Lei Geral de Proteção de Dados (LGPD). Para consultar, corrigir ou solicitar a exclusão dos seus dados, entre em contato pelo e-mail <strong>esforusco@gmail.com</strong>.</p></div>
+  </div></section>
+</div>
+
+<!-- SERVIÇOS -->
+<div class="page" data-page="servicos" hidden>
+  <section class="cover"><div class="w"><div class="mono dec">Serviços</div><h1 class="dec">Serviços</h1></div></section>
+  <nav class="crumb" aria-label="Você está em"><div class="w"><ol><li><a href="#home">Home</a></li><li>Serviços</li></ol></div></nav>
+  <section class="blk"><div class="w">
+    <div class="two"><div><div class="mono dec">O que fazemos</div><h2>Quatro frentes para o seu negócio crescer</h2></div>
+      <div class="prose"><p>Da atração do cliente à receita recorrente, cada frente conversa com a outra. Você pode começar por uma e ir somando conforme o negócio cresce.</p></div></div>
+    <div class="grps"><div class="grp"><span class="gi"><svg viewBox="0 0 40 40" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 32h28"/><path d="M10 26l7-7 5 4 9-11"/><path d="M26 12h5v5"/></g></svg></span><div class="mono gl">Crescimento</div><p>Trazer mais gente certa para o seu negócio.</p><ul><li>Criativos de alto rendimento</li><li>Tráfego pago</li><li>Landing pages</li><li>Funis de vendas</li><li>SEO e Google</li><li>Recuperação de leads</li></ul></div><div class="grp"><span class="gi"><svg viewBox="0 0 40 40" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="11" y="11" width="18" height="18" rx="2"/><path d="M16 5v6M24 5v6M16 29v6M24 29v6M5 16h6M5 24h6M29 16h6M29 24h6"/><circle cx="20" cy="20" r="3"/></g></svg></span><div class="mono gl">Inteligência</div><p>Decisões mais rápidas com IA e dados.</p><ul><li>IA para negócios</li><li>Agentes de IA</li><li>Atendimento automatizado</li><li>IA para vendas</li><li>Análise de dados</li><li>Dashboards</li></ul></div><div class="grp"><span class="gi"><svg viewBox="0 0 40 40" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="20" cy="20" r="5"/><path d="M20 5v5M20 30v5M5 20h5M30 20h5M9.5 9.5l3.5 3.5M27 27l3.5 3.5M9.5 30.5l3.5-3.5M27 13l3.5-3.5"/></g></svg></span><div class="mono gl">Operação</div><p>Processos rodando sozinhos, sem retrabalho.</p><ul><li>Automações</li><li>CRM</li><li>Sistemas personalizados</li><li>Integrações</li><li>Gestão de processos</li><li>Automação financeira e comercial</li></ul></div><div class="grp"><span class="gi"><svg viewBox="0 0 40 40" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="20" cy="20" r="14"/><path d="M24 14.5c-1-1.2-2.4-1.8-4-1.8-2.4 0-4 1.3-4 3.2 0 4.3 8.4 2.4 8.4 7 0 1.9-1.8 3.4-4.4 3.4-1.8 0-3.4-.7-4.4-2M20 10v2.7M20 26.3V30"/></g></svg></span><div class="mono gl">Receita</div><p>Mais dinheiro entrando, todo mês.</p><ul><li>Assinaturas recorrentes</li><li>Infoprodutos</li><li>Área de membros</li><li>E-commerce</li><li>Recuperação de clientes</li><li>Pós-venda e retenção</li></ul></div></div>
+  </div></section>
+  
+</div>
+
+<!-- ONDE ESTAMOS -->
+<div class="page" data-page="onde-estamos" hidden>
+  <section class="cover"><canvas data-art="dots" data-seed="6"></canvas><div class="w"><div class="mono dec">Onde estamos</div><h1 class="dec">Onde estamos</h1></div></section>
+  <nav class="crumb" aria-label="Você está em"><div class="w"><ol><li><a href="#home">Home</a></li><li>Onde estamos</li></ol></div></nav>
+  <section class="blk"><div class="w two">
+    <div><div class="mono dec">Presença</div><h2>Estamos onde o seu cliente está: no digital.</h2></div>
+    <div class="prose"><p>A Esforus é uma empresa nascida no digital. Nosso trabalho acontece online, o que permite atender negócios de qualquer cidade do Brasil com o mesmo cuidado.</p><p>Reuniões por vídeo, acompanhamento por mensagem e relatórios que você abre no celular.</p></div>
+  </div></section>
+  <section class="blk soft"><div class="w">
+    <div class="mono dec">Canais</div><h2>Onde encontrar a Esforus</h2>
+    <div class="contact-grid">
+      <div class="cbox"><span class="mono" style="color:var(--gray)">Instagram</span><strong>@esforus.co</strong><a class="l" href="https://instagram.com/esforus.co" target="_blank" rel="noopener">Abrir perfil ↗</a></div>
+      <div class="cbox"><span class="mono" style="color:var(--gray)">E-mail</span><strong>esforusco@gmail.com</strong><button type="button" data-copy="esforusco@gmail.com">Copiar e-mail</button></div>
+        <div class="cbox"><span class="mono" style="color:var(--gray)">WhatsApp</span><a class="wa" href="https://wa.me/559883327171" target="_blank" rel="noopener" aria-label="Conversar com a Esforus no WhatsApp"><svg viewBox="0 0 32 32" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M16 4a12 12 0 0 0-10.4 18L4 28l6.2-1.6A12 12 0 1 0 16 4z"/><path fill="currentColor" d="M11.6 10.2c.3-.6.6-.6 1-.6h.8c.3 0 .6.1.8.6l1 2.3c.1.3.1.6-.1.9l-.7.9c-.2.2-.2.5 0 .8.9 1.5 2.1 2.6 3.7 3.4.3.2.6.1.8-.1l.9-1.1c.2-.3.5-.3.8-.2l2.3 1.1c.4.2.5.4.5.7 0 .8-.3 1.9-1.3 2.4-1 .6-2.6.6-4.7-.4-2.4-1.1-4.4-3.3-5.4-5.4-.9-1.9-.8-3.5-.4-4.3z"/></svg></a></div>
+    </div>
+  </div></section>
+</div>
+
+<!-- SUSTENTABILIDADE -->
+<div class="page" data-page="sustentabilidade" hidden>
+  <section class="cover"><canvas data-art="waves" data-seed="15"></canvas><div class="w"><div class="mono dec">Sustentabilidade</div><h1 class="dec">Sustentabilidade</h1></div></section>
+  <nav class="crumb" aria-label="Você está em"><div class="w"><ol><li><a href="#home">Home</a></li><li>Sustentabilidade</li></ol></div></nav>
+  <section class="blk"><div class="w two">
+    <div><div class="mono dec">Nossa visão</div><h2>Crescer sem desperdício.</h2></div>
+    <div class="prose"><p>Negócio sustentável é o que cresce sem queimar caixa, equipe ou reputação.</p><p>Na Esforus, cada real de anúncio é acompanhado até virar venda. O que pode ser automático sai das mãos da sua equipe, e a relação com o cliente é construída para durar muito além da primeira compra.</p></div>
+  </div></section>
+  <section class="blk soft"><div class="w">
+    <div class="mono dec">Frentes</div><h2>Como colocamos isso em prática</h2>
+    <div class="cards">
+      <div class="card"><h3>Operação digital</h3><p>Trabalho, reuniões e documentos online, sem papel e sem deslocamento desnecessário.</p></div>
+      <div class="card"><h3>Verba sem desperdício</h3><p>Anúncio que não vende é cortado cedo. O dinheiro do cliente vai para o que funciona.</p></div>
+      <div class="card"><h3>Dados com responsabilidade</h3><p>Coletamos só o necessário e usamos só para o serviço contratado.</p></div>
+      <div class="card"><h3>Acesso para todos</h3><p>Sites leves, legíveis no celular e com bom contraste para quem enxerga pouco.</p></div>
+    </div>
+  </div></section>
+</div>
+
+<!-- NOTÍCIAS -->
+<div class="page" data-page="noticias" hidden>
+  <section class="cover"><canvas data-art="trails" data-seed="30"></canvas><div class="w"><div class="mono dec">Notícias</div><h1 class="dec">Notícias</h1></div></section>
+  <nav class="crumb" aria-label="Você está em"><div class="w"><ol><li><a href="#home">Home</a></li><li>Notícias</li></ol></div></nav>
+  <section class="blk"><div class="w"><div class="mono dec">A Esforus agora</div><h2>Novidades da empresa</h2><ul class="news" id="news-all"></ul></div></section>
+</div>
+
+<!-- FALE CONOSCO -->
+<div class="page" data-page="fale-conosco" hidden>
+  <section class="cover"><canvas data-art="dots" data-seed="18"></canvas><div class="w"><div class="mono dec">Contato</div><h1 class="dec">Fale conosco</h1></div></section>
+  <nav class="crumb" aria-label="Você está em"><div class="w"><ol><li><a href="#home">Home</a></li><li>Fale conosco</li></ol></div></nav>
+  <section class="blk"><div class="w two">
+    <div><div class="mono dec">Contato</div><h2>O mercado muda toda semana. Seu negócio muda antes.</h2></div>
+    <div class="prose"><p>Acompanhamos concorrentes, anúncios e tendências do seu setor e ajustamos sua estratégia antes que os outros percebam. Conta pra gente o que você vende e onde quer chegar.</p>
+      <div class="contact-grid" style="margin-top:28px">
+        <div class="cbox"><span class="mono" style="color:var(--gray)">E-mail</span><strong>esforusco@gmail.com</strong><button type="button" data-copy="esforusco@gmail.com">Copiar e-mail</button></div>
+        <div class="cbox"><span class="mono" style="color:var(--gray)">WhatsApp</span><a class="wa" href="https://wa.me/559883327171" target="_blank" rel="noopener" aria-label="Conversar com a Esforus no WhatsApp"><svg viewBox="0 0 32 32" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M16 4a12 12 0 0 0-10.4 18L4 28l6.2-1.6A12 12 0 1 0 16 4z"/><path fill="currentColor" d="M11.6 10.2c.3-.6.6-.6 1-.6h.8c.3 0 .6.1.8.6l1 2.3c.1.3.1.6-.1.9l-.7.9c-.2.2-.2.5 0 .8.9 1.5 2.1 2.6 3.7 3.4.3.2.6.1.8-.1l.9-1.1c.2-.3.5-.3.8-.2l2.3 1.1c.4.2.5.4.5.7 0 .8-.3 1.9-1.3 2.4-1 .6-2.6.6-4.7-.4-2.4-1.1-4.4-3.3-5.4-5.4-.9-1.9-.8-3.5-.4-4.3z"/></svg></a></div>
+        <div class="cbox"><span class="mono" style="color:var(--gray)">Instagram</span><strong>@esforus.co</strong><a class="l" href="https://instagram.com/esforus.co" target="_blank" rel="noopener">Abrir perfil ↗</a></div>
+      </div>
+      <p style="margin-top:24px;font-size:15px;color:var(--gray)">Para assuntos de ética ou privacidade, use o mesmo e-mail com o assunto "Canal de ética".</p>
+    </div>
+  </div></section>
+</div>
+</main>
+
+<footer>
+  <div class="w cols">
+    <div><a class="logo" href="#home"><svg viewBox="0 0 52 36" width="26" height="18" aria-hidden="true"><path fill="currentColor" d="M0 0h44l8 8H0zM0 14h32l8 8H0zM0 28h44l8 8H0z"/></svg>Esforus</a><p style="margin:0;max-width:30ch">Seu esforço, multiplicado.</p></div>
+    <div><h4>Quem somos</h4><ul><li><a href="#quem-somos">Visão geral</a></li><li><a href="#proposito">Propósito</a></li><li></li><li><a href="#transparencia">Transparência</a></li></ul></div>
+    <div><h4>Empresa</h4><ul><li><a href="#servicos">Serviços</a></li><li><a href="#onde-estamos">Onde estamos</a></li><li><a href="#sustentabilidade">Sustentabilidade</a></li><li><a href="#noticias">Notícias</a></li></ul></div>
+    <div><h4>Contato</h4><ul><li><a href="#fale-conosco">Fale conosco</a></li><li>esforusco@gmail.com</li><li><a class="wa sm" href="https://wa.me/559883327171" target="_blank" rel="noopener" aria-label="Conversar com a Esforus no WhatsApp"><svg viewBox="0 0 32 32" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M16 4a12 12 0 0 0-10.4 18L4 28l6.2-1.6A12 12 0 1 0 16 4z"/><path fill="currentColor" d="M11.6 10.2c.3-.6.6-.6 1-.6h.8c.3 0 .6.1.8.6l1 2.3c.1.3.1.6-.1.9l-.7.9c-.2.2-.2.5 0 .8.9 1.5 2.1 2.6 3.7 3.4.3.2.6.1.8-.1l.9-1.1c.2-.3.5-.3.8-.2l2.3 1.1c.4.2.5.4.5.7 0 .8-.3 1.9-1.3 2.4-1 .6-2.6.6-4.7-.4-2.4-1.1-4.4-3.3-5.4-5.4-.9-1.9-.8-3.5-.4-4.3z"/></svg></a></li><li>@esforus.co</li><li><a href="#privacidade">Privacidade</a></li></ul></div>
+  </div>
+  <div class="w bot"><span>Imagens do site geradas digitalmente.</span></div>
+  <div class="copy"><div class="w">Copyright © 2026 Esforus Company. Todos os direitos reservados.</div></div>
+</footer>
+
+<script>
+(function(){
+  const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // notícias
+  const NEWS=[
+    ['30 SET 2026','Novo site da Esforus','A empresa ganha um endereço próprio para apresentar serviços, propósito e compromissos de transparência.'],
+    ['SET 2026','Identidade visual apresentada','A Esforus apresenta sua nova marca, que passa a ser usada em todos os canais da empresa.'],
+    ['SET 2026','Nasce a Esforus Company','Empresa de marketing digital focada em criativos de alto rendimento, automação e inteligência artificial.']
+  ];
+  const li=n=>`<li><time>${n[0]}</time><div><h3>${n[1]}</h3><p>${n[2]}</p></div></li>`;
+  $('#news-home').innerHTML=NEWS.map(li).join('');$('#news-all').innerHTML=NEWS.map(li).join('');
+
+  // texto criptografado
+  const pool='ABCDEFGHJKLMNPQRSTUVWXYZ0123456789#%&*/<>=+';
+  const rnd=()=>pool[Math.random()*pool.length|0];
+  function decode(el,speed){
+    if(reduce)return;
+    const text=el.dataset.t||(el.dataset.t=el.textContent);el.setAttribute('aria-label',text.trim());
+    const id=el.dataset.run=(+el.dataset.run||0)+1;
+    el.textContent='';
+    const wrap=document.createElement('span');wrap.setAttribute('aria-hidden','true');el.appendChild(wrap);
+    const sp=[...text].map(ch=>{const s=document.createElement('span');const blank=/\s/.test(ch);s.textContent=blank?ch:rnd();if(!blank)s.className='enc';wrap.appendChild(s);return{s,ch,blank}});
+    const per=Math.min(speed,1500/Math.max(1,sp.length));
+    let t0=0,sh=0,done=0;
+    (function f(now){
+      if(+el.dataset.run!==id)return;
+      if(!t0)t0=now;
+      const target=Math.min(sp.length,Math.floor((now-t0)/per));
+      while(done<target){const o=sp[done];o.s.textContent=o.ch;o.s.className='';done++}
+      if(now-sh>70){sh=now;for(let k=done;k<sp.length;k++)if(!sp[k].blank)sp[k].s.textContent=rnd()}
+      if(done<sp.length)requestAnimationFrame(f);
+    })(performance.now());
+  }
+  function leaves(root){
+    return [...root.querySelectorAll('h1,h2,h3')].filter(el=>
+      el.children.length===0&&el.textContent.trim()&&!el.closest('svg')&&!el.matches('.enc,[aria-hidden="true"]')&&!el.parentElement.closest('[data-t]'));
+  }
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){decode(e.target,e.target.matches('h1,h2')?45:28);io.unobserve(e.target)}}),{threshold:.3});
+
+  // imagens geradas
+  function mul(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+  const ART={
+    trails(g,w,h,r){const bg=g.createLinearGradient(0,0,w,h);bg.addColorStop(0,'#0B0D1A');bg.addColorStop(1,'#141A3A');g.fillStyle=bg;g.fillRect(0,0,w,h);g.globalCompositeOperation='lighter';
+      for(let i=0;i<70;i++){const y=h*(.25+r()*.7),c=r()<.15?'255,140,90':r()<.5?'120,140,255':'220,226,255';g.strokeStyle=`rgba(${c},${.05+r()*.25})`;g.lineWidth=.5+r()*2.2;g.beginPath();g.moveTo(-50,y);const a=r()*h*.5-h*.25;g.bezierCurveTo(w*.3,y+a,w*.6,y-a*.6,w+50,y-h*(.1+r()*.3));g.stroke()}
+      g.globalCompositeOperation='source-over'},
+    blades(g,w,h,r){g.fillStyle='#0C0E18';g.fillRect(0,0,w,h);
+      for(let i=0;i<26;i++){const z=r(),s=40+z*260,x=r()*w*1.2-w*.1,y=r()*h,l=s*(1.2+r()),t=s*.18;const a=.05+z*.35;
+        g.fillStyle=r()<.12?`rgba(90,110,255,${a+.2})`:`rgba(230,234,245,${a})`;g.beginPath();g.moveTo(x,y);g.lineTo(x+l,y);g.lineTo(x+l+t,y+t);g.lineTo(x,y+t);g.fill()}},
+    grid(g,w,h,r){g.fillStyle='#0A0C16';g.fillRect(0,0,w,h);const hz=h*.48;const gl=g.createRadialGradient(w*.5,hz,0,w*.5,hz,w*.6);gl.addColorStop(0,'rgba(70,90,255,.45)');gl.addColorStop(1,'rgba(70,90,255,0)');g.fillStyle=gl;g.fillRect(0,0,w,h);
+      g.strokeStyle='rgba(180,190,255,.28)';g.lineWidth=1;for(let i=-24;i<=24;i++){g.beginPath();g.moveTo(w/2+i*8,hz);g.lineTo(w/2+i*w*.12,h);g.stroke()}
+      for(let k=1;k<18;k++){const y=hz+Math.pow(k/18,2.2)*(h-hz);g.beginPath();g.moveTo(0,y);g.lineTo(w,y);g.stroke()}
+      g.fillStyle='rgba(220,226,255,.8)';for(let i=0;i<80;i++){g.fillRect(r()*w,r()*hz*.9,1,1)}},
+    bokeh(g,w,h,r){g.fillStyle='#0B0D18';g.fillRect(0,0,w,h);g.globalCompositeOperation='lighter';
+      for(let i=0;i<60;i++){const x=r()*w,y=r()*h,s=8+r()*70,c=r()<.2?'255,150,100':r()<.6?'110,130,255':'210,216,240';const gr=g.createRadialGradient(x,y,0,x,y,s);gr.addColorStop(0,`rgba(${c},${.15+r()*.3})`);gr.addColorStop(.7,`rgba(${c},.06)`);gr.addColorStop(1,`rgba(${c},0)`);g.fillStyle=gr;g.beginPath();g.arc(x,y,s,0,6.3);g.fill()}
+      g.globalCompositeOperation='source-over'},
+    waves(g,w,h,r){const bg=g.createLinearGradient(0,0,0,h);bg.addColorStop(0,'#0C0F22');bg.addColorStop(1,'#090A12');g.fillStyle=bg;g.fillRect(0,0,w,h);
+      const f=.004+r()*.004,p=r()*6;for(let i=0;i<46;i++){const y0=h*.2+i*h*.016;g.strokeStyle=i%9===0?'rgba(255,140,90,.5)':`rgba(160,175,255,${.08+i/46*.3})`;g.lineWidth=1;g.beginPath();for(let x=0;x<=w;x+=6){const y=y0+Math.sin(x*f+p+i*.12)*h*.08*Math.sin(i*.07+1);x?g.lineTo(x,y):g.moveTo(x,y)}g.stroke()}},
+    dots(g,w,h,r){g.fillStyle='#0A0C15';g.fillRect(0,0,w,h);const st=12;for(let y=st;y<h;y+=st)for(let x=st;x<w;x+=st){const d=Math.hypot(x-w*.62,y-h*.5)/(w*.5);const v=Math.max(0,1-d)*(.4+r()*.6);if(v<.05)continue;g.fillStyle=r()<.02?`rgba(255,140,90,${v})`:`rgba(170,185,255,${v*.8})`;g.beginPath();g.arc(x,y,.6+v*2,0,6.3);g.fill()}}
+  };
+  function paint(cv){const d=Math.min(devicePixelRatio||1,2),w=cv.clientWidth,h=cv.clientHeight;if(!w||!h)return;cv.width=w*d;cv.height=h*d;const g=cv.getContext('2d');g.setTransform(d,0,0,d,0,0);(ART[cv.dataset.art]||ART.trails)(g,w,h,mul(+cv.dataset.seed||1))}
+
+  // ilustrações com sentido
+  const L='#C9CFF5',A='#4A5BFF',W='#FFFFFF',D='#0D0E12';
+  const S=(inner)=>`<svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
+  const ILL={
+    servicos:S(`
+      <g stroke="${L}" stroke-opacity=".35" stroke-dasharray="4 6" stroke-width="1.5"><path d="M212 170h40"/><path d="M392 120h20"/><path d="M392 250h20"/><path d="M320 300v40h-110"/></g>
+      <rect x="40" y="50" width="170" height="250" rx="12" stroke="${L}" stroke-width="2"/>
+      <rect x="54" y="64" width="142" height="120" rx="6" fill="${A}" fill-opacity=".55"/>
+      <path d="M70 160l34-38 26 26 18-16 34 28" stroke="${W}" stroke-width="2"/><circle cx="160" cy="92" r="9" fill="${W}"/>
+      <path d="M56 204h110M56 222h80" stroke="${L}" stroke-width="3" stroke-opacity=".7"/>
+      <rect x="56" y="250" width="138" height="32" rx="16" fill="${W}"/><path d="M96 266h58" stroke="${D}" stroke-width="3"/>
+      <path d="M252 70h140l-24 60H276z" stroke="${L}" stroke-width="2" fill="${A}" fill-opacity=".15"/>
+      <path d="M276 140h92l-18 55h-56z" stroke="${L}" stroke-width="2" fill="${A}" fill-opacity=".35"/>
+      <path d="M294 205h56l-12 55h-32z" stroke="${L}" stroke-width="2" fill="${A}" fill-opacity=".75"/>
+      <circle cx="322" cy="290" r="8" fill="${W}"/>
+      <rect x="412" y="50" width="160" height="130" rx="12" stroke="${L}" stroke-width="2"/>
+      <path d="M430 160h124M430 160V70" stroke="${L}" stroke-opacity=".4" stroke-width="1.5"/>
+      <path d="M432 148l28-18 24 10 30-34 34-22" stroke="${W}" stroke-width="3"/><circle cx="548" cy="84" r="6" fill="${A}" stroke="${W}" stroke-width="2"/>
+      <rect x="412" y="200" width="160" height="110" rx="12" stroke="${L}" stroke-width="2"/>
+      <rect x="426" y="216" width="92" height="30" rx="10" fill="${L}" fill-opacity=".25"/><path d="M438 231h66" stroke="${L}" stroke-width="3"/>
+      <rect x="466" y="256" width="92" height="30" rx="10" fill="${A}"/><path d="M478 271h66" stroke="${W}" stroke-width="3"/>
+      <g stroke="${L}" stroke-width="2"><circle cx="190" cy="340" r="14"/><circle cx="190" cy="340" r="5"/><path d="M190 318v6M190 356v6M168 340h6M206 340h6"/></g>`),
+    proposito:S((()=>{let g='';const cols=[1,2,4,8];cols.forEach((n,c)=>{for(let r=0;r<n;r++){const x=70+c*125,y=330-r*34;const top=r===n-1;g+=`<rect x="${x}" y="${y}" width="96" height="24" rx="4" ${top?`fill="${c===3?A:W}"`:`fill="${A}" fill-opacity="${.15+r*.07}" stroke="${L}" stroke-opacity=".5"`}/>`}});
+      g+=`<path d="M118 300c60-10 110-40 150-90s110-110 190-140" stroke="${W}" stroke-width="2" stroke-dasharray="3 7"/><path d="M448 60l14 10-16 8" stroke="${W}" stroke-width="2"/>`;
+      g+=`<g font-family="DM Mono,monospace" font-size="15" fill="${L}"><text x="100" y="376">×1</text><text x="225" y="376">×2</text><text x="350" y="376">×4</text><text x="475" y="376">×8</text></g>`;return g})()),
+    transparencia:S(`
+      <rect x="150" y="30" width="250" height="330" rx="12" fill="${W}" fill-opacity=".04" stroke="${L}" stroke-width="2"/>
+      <path d="M180 70h120M180 92h80" stroke="${W}" stroke-width="4"/>
+      <path d="M180 130h190M180 150h170M180 170h180" stroke="${L}" stroke-opacity=".45" stroke-width="3"/>
+      <path d="M180 320h190" stroke="${L}" stroke-opacity=".4" stroke-width="1.5"/>
+      <rect x="192" y="262" width="26" height="58" fill="${A}" fill-opacity=".45"/><rect x="232" y="240" width="26" height="80" fill="${A}" fill-opacity=".65"/><rect x="272" y="252" width="26" height="68" fill="${A}" fill-opacity=".45"/><rect x="312" y="212" width="26" height="108" fill="${A}"/>
+      <circle cx="430" cy="110" r="48" fill="${A}"/><path d="M408 110l16 16 30-32" stroke="${W}" stroke-width="6"/>
+      <g stroke="${W}" stroke-width="3"><circle cx="360" cy="245" r="42" fill="${D}" fill-opacity=".35"/><path d="M390 275l38 38"/></g>
+      <g stroke="${L}" stroke-width="2.5"><rect x="72" y="250" width="56" height="44" rx="6" fill="${D}"/><path d="M84 250v-14a16 16 0 0 1 32 0v14"/><circle cx="100" cy="270" r="4" fill="${L}"/><path d="M100 274v8"/></g>`),
+    regras:S(`
+      <rect x="200" y="20" width="200" height="360" rx="26" stroke="${L}" stroke-width="2.5"/>
+      <path d="M270 40h60" stroke="${L}" stroke-width="3" stroke-opacity=".5"/>
+      <rect x="220" y="64" width="160" height="150" rx="8" fill="${A}" fill-opacity=".55"/>
+      <path d="M236 190l34-40 26 24 20-18 48 34" stroke="${W}" stroke-width="2.5"/>
+      <rect x="226" y="72" width="92" height="22" rx="4" fill="${W}"/><text x="236" y="87" font-family="DM Mono,monospace" font-size="11" fill="${D}" letter-spacing="1">ILUSTRATIVO</text>
+      <path d="M222 238h120M222 256h90" stroke="${L}" stroke-width="3" stroke-opacity=".7"/>
+      <rect x="222" y="290" width="156" height="34" rx="17" fill="${W}"/><path d="M262 307h76" stroke="${D}" stroke-width="3"/>
+      <circle cx="420" cy="300" r="34" fill="${A}"/><path d="M404 300l11 11 22-24" stroke="${W}" stroke-width="5"/>
+      <g stroke="${L}" stroke-width="2" stroke-opacity=".6"><path d="M130 110h50M110 150h70M140 190h40"/></g>`)
+  };
+  document.querySelectorAll('[data-ill]').forEach(el=>el.innerHTML=ILL[el.dataset.ill]||'');
+
+  document.querySelectorAll('strong,li,span,a').forEach(el=>{if(el.children.length===0&&/@|\.co\b/.test(el.textContent))el.classList.add('nocaps')});
+  // páginas
+  const PAGES=$$('.page').map(p=>p.dataset.page);
+  const GROUP={'quem-somos':'quem','proposito':'quem','transparencia':'quem'};
+  function show(){
+    let id=(location.hash||'#home').slice(1),anchor=null;
+    if(id==='privacidade'){id='transparencia';anchor='privacidade'}
+    if(!PAGES.includes(id))id='home';
+    $$('.page').forEach(p=>p.hidden=p.dataset.page!==id);
+    $$('.menu a[data-r]').forEach(a=>a.classList.toggle('on',a.dataset.r===id));
+    $$('.dd').forEach(d=>d.classList.toggle('on',GROUP[id]===d.dataset.g));
+    $('#menu').classList.remove('open');$('#burger').setAttribute('aria-expanded','false');
+    const pg=$(`.page[data-page="${id}"]`);
+    pg.querySelectorAll('canvas[data-art]').forEach(paint);
+    if(anchor)requestAnimationFrame(()=>document.getElementById(anchor).scrollIntoView());else scrollTo(0,0);
+    pg.querySelectorAll('.cover h1').forEach((el,k)=>setTimeout(()=>decode(el,el.tagName==='H1'?70:40),k*350));
+    leaves(pg).filter(el=>!el.closest('.cover')).forEach(el=>{io.unobserve(el);io.observe(el)});
+  }
+  addEventListener('hashchange',show);
+  let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>$$('.page:not([hidden]) canvas[data-art]').forEach(paint),150)});
+  show();
+
+  // menu
+  $('#burger').addEventListener('click',()=>{const m=$('#menu');const o=m.classList.toggle('open');$('#burger').setAttribute('aria-expanded',o)});
+  $$('.dd > button').forEach(b=>b.addEventListener('click',()=>b.parentElement.classList.toggle('open')));
+
+  // copiar e-mail
+  $$('[data-copy]').forEach(b=>b.addEventListener('click',()=>{
+    const t=b.dataset.copy,label=b.textContent;
+    const ok=()=>{b.textContent='Copiado';setTimeout(()=>b.textContent=label,1600)};
+    try{navigator.clipboard.writeText(t).then(ok,()=>{})}catch(e){}
+  }));
+})();
+</script>
+
+</body></html>
